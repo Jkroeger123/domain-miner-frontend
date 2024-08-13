@@ -6,8 +6,14 @@ import { redirect } from "next/navigation";
 
 export const createSearchAndRedirect = async (prompt: string) => {
   const search = await createSearch(prompt);
-  //kick off modal process
-  redirect(`/search/${search.id}`);
+
+  const response = await fetch(
+    `https://jkroeger123--domain-miner-find-domains.modal.run/?search_id=${search.id}`,
+  );
+
+  if (response.ok) {
+    redirect(`/search/${search.id}`);
+  }
 };
 
 const createSearch = async (prompt: string) => {
@@ -17,6 +23,7 @@ const createSearch = async (prompt: string) => {
     data: {
       prompt,
       userId: user.id,
+      searching: true,
     },
   });
 
