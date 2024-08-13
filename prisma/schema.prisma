@@ -14,6 +14,8 @@ model Domain {
     updatedAt DateTime @updatedAt
     searchId  String
     Search    Search   @relation(fields: [searchId], references: [id])
+
+    @@unique([name, searchId])
 }
 
 model Search {
@@ -23,6 +25,7 @@ model Search {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     userId    String
+    searching Boolean  @default(false)
     User      User     @relation(fields: [userId], references: [id])
 }
 

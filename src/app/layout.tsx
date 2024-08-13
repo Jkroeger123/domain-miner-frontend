@@ -9,6 +9,7 @@ import {
   SignInButton,
   UserButton,
 } from "@clerk/nextjs";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Domain Finder",
@@ -24,7 +25,9 @@ export default function RootLayout({
       <html lang="en" className={`${GeistSans.variable}`}>
         <body>
           <header className="flex w-full items-center justify-between p-4">
-            <div className="text-2xl font-bold">Domain Finder</div>
+            <Link className="text-2xl font-bold" href={"/"}>
+              Domain Finder
+            </Link>
             <SignedOut>
               <SignInButton />
             </SignedOut>

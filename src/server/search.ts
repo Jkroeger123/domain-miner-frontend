@@ -35,3 +35,15 @@ export const getSearch = async (id: string) => {
 
   return search;
 };
+
+export const getSearches = async () => {
+  const user = await getUser();
+
+  const searches = await prisma.search.findMany({
+    where: { userId: user.id },
+    orderBy: { createdAt: "desc" },
+    take: 6, // Limit to the 6 most recent searches
+  });
+
+  return searches;
+};
