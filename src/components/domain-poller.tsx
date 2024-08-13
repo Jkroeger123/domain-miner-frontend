@@ -19,9 +19,6 @@ export default function DomainPoller({
   initialSearching,
 }: DomainListProps) {
   const [domains, setDomains] = useState(initialDomains);
-  const [lastId, setLastId] = useState(
-    initialDomains[initialDomains.length - 1]?.id,
-  );
   const [isSearching, setIsSearching] = useState(initialSearching);
 
   const fetchNewDomains = useCallback(async () => {
@@ -31,17 +28,16 @@ export default function DomainPoller({
       domains: newDomains,
       searching,
       error,
-    } = await getDomains(searchId, lastId);
+    } = await getDomains(searchId);
     if (error) {
       console.error("Error polling domains:", error);
       return;
     }
     if (newDomains.length > 0) {
-      setDomains((prevDomains) => [...prevDomains, ...newDomains]);
-      setLastId(newDomains[newDomains.length - 1]!.id);
+      setDomains(newDomains);
     }
     setIsSearching(searching);
-  }, [searchId, lastId, isSearching]);
+  }, [searchId, isSearching]);
 
   useEffect(() => {
     const pollInterval = setInterval(() => {
@@ -56,7 +52,7 @@ export default function DomainPoller({
   return (
     <div>
       {isSearching && <LoadingBar />}
-      <div className="mt-4 grid w-full max-w-4xl grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mx-auto mt-4 grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         <AnimatePresence>
           {domains.map((domain) => (
             <motion.div
