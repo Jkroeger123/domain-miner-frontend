@@ -10,14 +10,18 @@ export const getUser = async () => {
     throw new Error("User not found");
   }
 
-  const user = await prisma.user.findUnique({
+  let user = await prisma.user.findUnique({
     where: {
       clerkId: userId,
     },
   });
 
   if (!user) {
-    throw new Error("User not found");
+    user = await prisma.user.create({
+      data: {
+        clerkId: userId,
+      },
+    });
   }
 
   return user;
