@@ -31,12 +31,9 @@ const createSearch = async (prompt: string) => {
 };
 
 export const getSearch = async (id: string) => {
-  const user = await getUser();
-
   const search = await prisma.search.findUnique({
     where: {
       id,
-      userId: user.id,
     },
   });
 
