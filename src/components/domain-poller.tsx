@@ -56,7 +56,7 @@ export default function DomainPoller({
   return (
     <div>
       {isSearching && <LoadingBar />}
-      <div className="mt-4 space-y-4">
+      <div className="mt-4 grid w-full max-w-4xl grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         <AnimatePresence>
           {domains.map((domain) => (
             <motion.div
