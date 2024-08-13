@@ -42,7 +42,7 @@ export const DomainForm = () => {
           variant="default"
           className="absolute right-0 top-0 h-full px-4"
           onClick={() => createSearch(prompt)}
-          disabled={loading || !isSignedIn}
+          disabled={loading || !isSignedIn || !prompt}
         >
           {loading ? <Spinner /> : <ArrowRightIcon className="h-5 w-5" />}
         </Button>
