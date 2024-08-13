@@ -35,7 +35,7 @@ export default function RootLayout({
               <UserButton />
             </SignedIn>
           </header>
-          {children}
+          <SignedIn>{children}</SignedIn>
         </body>
       </html>
     </ClerkProvider>
