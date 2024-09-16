@@ -62,12 +62,41 @@ export default function DomainPoller({
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <Card>
+              <Card className="h-full">
                 <CardContent className="p-4">
                   <h3 className="text-lg font-semibold">{domain.name}</h3>
-                  <p className="text-sm text-gray-500">
-                    Added: {new Date(domain.createdAt).toLocaleString()}
-                  </p>
+                  {domain.searchVolume ? (
+                    <p className="text-sm text-gray-500">
+                      Monthly Searches: {domain.searchVolume}
+                    </p>
+                  ) : (
+                    <></>
+                  )}
+
+                  {domain.competition &&
+                  domain.competition !== "UNSPECIFIED" ? (
+                    <p className="text-sm text-gray-500">
+                      Competition: {domain.competition}
+                    </p>
+                  ) : (
+                    <></>
+                  )}
+
+                  {domain.highBid ? (
+                    <p className="text-sm text-gray-500">
+                      High Bid: ${domain.highBid.toFixed(2)}
+                    </p>
+                  ) : (
+                    <></>
+                  )}
+
+                  {domain.lowBid ? (
+                    <p className="text-sm text-gray-500">
+                      Low Bid: ${domain.lowBid.toFixed(2)}
+                    </p>
+                  ) : (
+                    <></>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
