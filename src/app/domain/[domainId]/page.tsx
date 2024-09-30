@@ -13,13 +13,23 @@ export async function generateMetadata({
     return {};
   }
 
-  const ogImageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/og?domainId=${params.domainId}`;
+  const { name, competition, highBid, lowBid, searchVolume } = domain.data;
+
+  const ogImageUrl = new URL(`${process.env.NEXT_PUBLIC_BASE_URL}/api/og`);
+  ogImageUrl.searchParams.append("name", name);
+  ogImageUrl.searchParams.append("competition", competition ?? "UNSPECIFIED");
+  ogImageUrl.searchParams.append("highBid", highBid?.toFixed(2) ?? "");
+  ogImageUrl.searchParams.append("lowBid", lowBid?.toFixed(2) ?? "");
+  ogImageUrl.searchParams.append(
+    "searchVolume",
+    searchVolume?.toString() ?? "",
+  );
 
   return {
-    title: `${domain.data.name} - Domain Finder`,
-    description: `Domain metrics for ${domain.data.name}`,
+    title: `${name} - Domain Finder`,
+    description: `Domain metrics for ${name}`,
     openGraph: {
-      images: [ogImageUrl],
+      images: [ogImageUrl.toString()],
     },
   };
 }

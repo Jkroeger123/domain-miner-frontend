@@ -1,24 +1,19 @@
 import { ImageResponse } from "next/og";
 import { type NextRequest } from "next/server";
-import { getDomain } from "@/server/domains";
 
 export const runtime = "edge";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const domainId = searchParams.get("domainId");
+  const name = searchParams.get("name");
+  const competition = searchParams.get("competition");
+  const highBid = searchParams.get("highBid");
+  const lowBid = searchParams.get("lowBid");
+  const searchVolume = searchParams.get("searchVolume");
 
-  if (!domainId) {
-    return new Response("Missing domainId parameter", { status: 400 });
+  if (!name) {
+    return new Response("Missing name parameter", { status: 400 });
   }
-
-  const domain = await getDomain(domainId);
-
-  if (!domain.data) {
-    return new Response("Domain not found", { status: 404 });
-  }
-
-  const { name, competition, highBid, lowBid, searchVolume } = domain.data;
 
   return new ImageResponse(
     (
@@ -45,7 +40,7 @@ export async function GET(req: NextRequest) {
           }}
         >
           <div>
-            CPC: ${lowBid?.toFixed(2) ?? "?"} - ${highBid?.toFixed(2) ?? "?"}
+            CPC: ${lowBid ?? "?"} - ${highBid ?? "?"}
           </div>
           <div>Volume: {searchVolume ?? "?"}</div>
         </div>
