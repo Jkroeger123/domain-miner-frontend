@@ -35,9 +35,7 @@ export default async function SearchPage({
             <CardTitle>Monthly Search Volume</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-4xl font-bold">
-              {searchVolume === null ? "?" : searchVolume}
-            </div>
+            <div className="text-4xl font-bold">{searchVolume ?? "?"}</div>
             <p className="text-muted-foreground">
               Average monthly searches keywords related to this domain
             </p>
