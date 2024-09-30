@@ -34,3 +34,18 @@ export async function getDomains(
     return { domains: [], searching: false, error: "Error fetching domains" };
   }
 }
+
+export async function getDomain(domainId: string) {
+  try {
+    const domain = await prisma.domain.findUnique({
+      where: {
+        id: domainId,
+      },
+    });
+
+    return { data: domain, error: null };
+  } catch (error) {
+    console.error("Error fetching domain:", error);
+    return { data: null, error: "Error fetching domain" };
+  }
+}

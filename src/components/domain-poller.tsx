@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import LoadingBar from "@/components/ui/loading-bar";
 import { type Domain } from "@prisma/client";
+import Link from "next/link";
 
 interface DomainListProps {
   searchId: string;
@@ -61,44 +62,47 @@ export default function DomainPoller({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
+              whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
             >
-              <Card className="h-full">
-                <CardContent className="p-4">
-                  <h3 className="text-lg font-semibold">{domain.name}</h3>
-                  {domain.searchVolume ? (
-                    <p className="text-sm text-gray-500">
-                      Monthly Searches: {domain.searchVolume}
-                    </p>
-                  ) : (
-                    <></>
-                  )}
+              <Link href={`/domain/${domain.id}`} passHref key={domain.id}>
+                <Card className="h-full">
+                  <CardContent className="p-4">
+                    <h3 className="text-lg font-semibold">{domain.name}</h3>
+                    {domain.searchVolume ? (
+                      <p className="text-sm text-gray-500">
+                        Monthly Searches: {domain.searchVolume}
+                      </p>
+                    ) : (
+                      <></>
+                    )}
 
-                  {domain.competition &&
-                  domain.competition !== "UNSPECIFIED" ? (
-                    <p className="text-sm text-gray-500">
-                      Competition: {domain.competition}
-                    </p>
-                  ) : (
-                    <></>
-                  )}
+                    {domain.competition &&
+                    domain.competition !== "UNSPECIFIED" ? (
+                      <p className="text-sm text-gray-500">
+                        Competition: {domain.competition}
+                      </p>
+                    ) : (
+                      <></>
+                    )}
 
-                  {domain.highBid ? (
-                    <p className="text-sm text-gray-500">
-                      High Bid: ${domain.highBid.toFixed(2)}
-                    </p>
-                  ) : (
-                    <></>
-                  )}
+                    {domain.highBid ? (
+                      <p className="text-sm text-gray-500">
+                        High Bid: ${domain.highBid.toFixed(2)}
+                      </p>
+                    ) : (
+                      <></>
+                    )}
 
-                  {domain.lowBid ? (
-                    <p className="text-sm text-gray-500">
-                      Low Bid: ${domain.lowBid.toFixed(2)}
-                    </p>
-                  ) : (
-                    <></>
-                  )}
-                </CardContent>
-              </Card>
+                    {domain.lowBid ? (
+                      <p className="text-sm text-gray-500">
+                        Low Bid: ${domain.lowBid.toFixed(2)}
+                      </p>
+                    ) : (
+                      <></>
+                    )}
+                  </CardContent>
+                </Card>
+              </Link>
             </motion.div>
           ))}
         </AnimatePresence>
