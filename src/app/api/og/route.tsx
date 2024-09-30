@@ -34,18 +34,41 @@ export async function GET(req: NextRequest) {
         <div
           style={{
             display: "flex",
-            justifyContent: "space-between",
-            width: "80%",
-            marginBottom: 16,
+            flexDirection: "column",
+            alignItems: "center",
+            width: "100%",
           }}
         >
-          <div>
-            CPC: ${lowBid ?? "?"} - ${highBid ?? "?"}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "50%",
+              marginBottom: 16,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+              }}
+            >
+              CPC: ${lowBid ?? "?"} - ${highBid ?? "?"}
+            </div>
+            <div
+              style={{
+                display: "flex",
+              }}
+            >
+              Search Volume: {searchVolume ?? "?"}
+            </div>
           </div>
-          <div>Volume: {searchVolume ?? "?"}</div>
-        </div>
-        <div>
-          Competition: {competition === "UNSPECIFIED" ? "?" : competition}
+          <div
+            style={{
+              display: "flex",
+            }}
+          >
+            Competition: {competition === "UNSPECIFIED" ? "?" : competition}
+          </div>
         </div>
       </div>
     ),
