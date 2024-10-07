@@ -6,6 +6,7 @@ import { useState, type JSX, type SVGProps } from "react";
 import Spinner from "./spinner";
 import { useAuth } from "@clerk/nextjs";
 import { createSearchAndRedirect } from "@/server/search";
+import { Textarea } from "./ui/textarea";
 
 export const DomainForm = () => {
   const { userId } = useAuth();
@@ -30,17 +31,16 @@ export const DomainForm = () => {
     <>
       {error && <div className="text-destructive">{error}</div>}
       <div className="relative mt-6 w-full max-w-xl">
-        <Input
-          type="text"
+        <Textarea
           placeholder="Describe the domain you are looking for..."
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          className="w-full rounded-md border px-4 py-2"
+          className="w-full rounded-md border px-4 py-2 min-h-[100px] resize-none pr-16"
           disabled={loading}
         />
         <Button
           variant="default"
-          className="absolute right-0 top-0 h-full px-4"
+          className="absolute right-2 bottom-2 px-4"
           onClick={() => createSearch(prompt)}
           disabled={loading || !isSignedIn || !prompt}
         >
