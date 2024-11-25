@@ -16,6 +16,16 @@ export const createSearchAndRedirect = async (prompt: string) => {
   }
 };
 
+export const createSearchFromForm = async (
+  keywords: string,
+  tld: string,
+  industry: string,
+  maxLength: number,
+) => {
+  const prompt = `Domains branching from the following keywords: ${keywords} where tlds are: ${tld}, in Industry: ${industry}, with domain max length: ${maxLength}`;
+  return createSearchAndRedirect(prompt);
+};
+
 const createSearch = async (prompt: string) => {
   const user = await getUser();
 

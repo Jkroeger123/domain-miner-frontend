@@ -10,6 +10,7 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import Link from "next/link";
+import { BookmarksLink } from "@/components/bookmark-link";
 
 export const metadata: Metadata = {
   title: "Domain Finder",
@@ -23,11 +24,17 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className={`${GeistSans.variable}`}>
-        <body>
-          <header className="flex w-full items-center justify-between p-4">
-            <Link className="text-2xl font-bold" href={"/"}>
-              Domain Finder
-            </Link>
+        <body className="min-h-screen bg-gray-50">
+          <header className="flex w-full items-center justify-between bg-white p-4 shadow-sm">
+            <div className="flex items-center gap-4">
+              <Link className="text-2xl font-bold" href={"/"}>
+                Domain Finder
+              </Link>
+              <SignedIn>
+                <BookmarksLink />
+              </SignedIn>
+            </div>
+
             <SignedOut>
               <SignInButton />
             </SignedOut>

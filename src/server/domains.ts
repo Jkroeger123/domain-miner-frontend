@@ -1,13 +1,34 @@
 "use server";
 
 import { db as prisma } from "@/server/db";
-import { type Domain } from "@prisma/client";
+import { auth } from "@clerk/nextjs/server";
+import { type User, type Domain } from "@prisma/client";
+
+export interface DomainWithBookmark extends Domain {
+  isBookmarked: boolean;
+}
 
 export async function getDomains(
   searchId: string,
   lastId?: string,
-): Promise<{ domains: Domain[]; searching: boolean; error: string | null }> {
+): Promise<{
+  domains: DomainWithBookmark[];
+  searching: boolean;
+  error: string | null;
+}> {
   try {
+    const { userId } = auth();
+
+    let user: User | null = null;
+
+    if (userId) {
+      user = await prisma.user.findUnique({
+        where: {
+          clerkId: userId,
+        },
+      });
+    }
+
     const search = await prisma.search.findUnique({
       where: { id: searchId },
       select: { searching: true },
@@ -26,9 +47,38 @@ export async function getDomains(
         createdAt: "asc",
       },
       take: 100,
+      include: user
+        ? {
+            bookmarks: {
+              where: {
+                userId: user.id,
+              },
+              select: {
+                id: true,
+              },
+            },
+          }
+        : undefined,
     });
 
-    return { domains, searching: Boolean(search.searching), error: null };
+    // Transform the domains to include isBookmarked flag
+    const transformedDomains = domains.map((domain) => {
+      // If we included bookmarks, remove the bookmarks array and add isBookmarked flag
+      if ("bookmarks" in domain) {
+        const { bookmarks, ...domainWithoutBookmarks } = domain;
+        return {
+          ...domainWithoutBookmarks,
+          isBookmarked: (bookmarks as []).length > 0,
+        };
+      }
+      return domain;
+    }) as DomainWithBookmark[];
+
+    return {
+      domains: transformedDomains,
+      searching: Boolean(search.searching),
+      error: null,
+    };
   } catch (error) {
     console.error("Error fetching domains:", error);
     return { domains: [], searching: false, error: "Error fetching domains" };
