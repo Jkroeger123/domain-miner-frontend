@@ -6,13 +6,32 @@ import { getBookmarkedDomains, toggleBookmark } from "@/server/bookmark";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
+const Badge = ({
+  children,
+  variant,
+}: {
+  children: React.ReactNode;
+  variant: string;
+}) => {
+  const styles = {
+    blue: "bg-blue-100 text-blue-700",
+    amber: "bg-amber-100 text-amber-700",
+    outline: "border border-gray-200 text-gray-600",
+    default: "bg-gray-100 text-gray-700",
+  } as const;
+
+  return (
+    <span
+      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${styles[variant as keyof typeof styles] || styles.default}`}
+    >
+      {children}
+    </span>
+  );
+};
+
 export default async function BookmarksPage() {
   const { userId } = auth();
-
-  if (!userId) {
-    redirect("/sign-in");
-  }
-
+  if (!userId) redirect("/sign-in");
   const bookmarks = await getBookmarkedDomains(userId);
 
   return (
@@ -37,9 +56,9 @@ export default async function BookmarksPage() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {bookmarks.map(({ domain, createdAt }) => (
             <div key={domain.id}>
-              <Card className="h-full border-gray-200 bg-white transition-shadow hover:shadow-md">
-                <CardContent className="p-4">
-                  <div className="mb-3 flex items-start justify-between">
+              <Card className="h-40 bg-white">
+                <CardContent className="flex h-full flex-col p-4">
+                  <div className="flex items-start justify-between">
                     <h3 className="text-lg font-semibold">{domain.name}</h3>
                     <form
                       action={async () => {
@@ -54,39 +73,37 @@ export default async function BookmarksPage() {
                         className="text-red-600 hover:bg-red-100 hover:text-red-700"
                       >
                         <Trash2Icon size={16} />
-                        <span className="sr-only">Remove bookmark</span>
                       </Button>
                     </form>
                   </div>
-
-                  <div className="mb-2 flex items-center justify-between text-sm">
-                    {domain.searchVolume && (
-                      <span className="text-blue-600">
-                        Monthly Searches: {domain.searchVolume.toLocaleString()}
-                      </span>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {Boolean(domain.searchVolume) && (
+                      <Badge variant="blue">
+                        Monthly Searches: {domain.searchVolume}
+                      </Badge>
                     )}
                     {domain.competition &&
                       domain.competition !== "UNSPECIFIED" && (
-                        <span className="text-amber-600">
+                        <Badge variant="amber">
                           Competition: {domain.competition}
-                        </span>
+                        </Badge>
                       )}
                   </div>
-
-                  {(domain.highBid ?? domain.lowBid) && (
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      {domain.highBid && (
-                        <span>High Bid: ${domain.highBid.toFixed(2)}</span>
-                      )}
-                      {domain.lowBid && (
-                        <span>Low Bid: ${domain.lowBid.toFixed(2)}</span>
-                      )}
-                    </div>
-                  )}
-
-                  <p className="mt-3 text-xs text-muted-foreground">
-                    Bookmarked on {new Date(createdAt).toLocaleDateString()}
-                  </p>
+                  <div className="mt-auto flex flex-wrap gap-2">
+                    {domain.highBid && (
+                      <Badge variant="outline">
+                        High Bid: ${domain.highBid.toFixed(2)}
+                      </Badge>
+                    )}
+                    {domain.lowBid && (
+                      <Badge variant="outline">
+                        Low Bid: ${domain.lowBid.toFixed(2)}
+                      </Badge>
+                    )}
+                    <span className="ml-auto text-xs text-muted-foreground">
+                      Bookmarked on {new Date(createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
                 </CardContent>
               </Card>
             </div>

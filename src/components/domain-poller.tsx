@@ -17,6 +17,29 @@ interface DomainListProps {
   initialSearching: boolean;
 }
 
+const Badge = ({
+  children,
+  variant,
+}: {
+  children: React.ReactNode;
+  variant: string;
+}) => {
+  const styles = {
+    blue: "bg-blue-100 text-blue-700",
+    amber: "bg-amber-100 text-amber-700",
+    outline: "border border-gray-200 text-gray-600",
+    default: "bg-gray-100 text-gray-700",
+  } as const;
+
+  return (
+    <span
+      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${styles[variant as keyof typeof styles] || styles.default}`}
+    >
+      {children}
+    </span>
+  );
+};
+
 export default function DomainPoller({
   searchId,
   initialDomains,
@@ -87,59 +110,51 @@ export default function DomainPoller({
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
           whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
-          className="flex"
         >
-          <Link href={`/domain/${domain.id}`} passHref className="w-full">
-            <Card className="flex h-40 border-gray-200 bg-white transition-shadow duration-200 hover:shadow-md">
-              <CardContent className="flex w-full flex-col justify-between p-4">
-                <div>
-                  <div className="mb-2 flex items-start justify-between">
-                    <h3 className="line-clamp-1 text-lg font-semibold">
-                      {domain.name}
-                    </h3>
-                    {userId && (
-                      <Button
-                        variant={domain.isBookmarked ? "default" : "outline"}
-                        size="sm"
-                        className="ml-2 shrink-0"
-                        onClick={(e) => void handleBookmarkClick(e, domain.id)}
-                      >
-                        <BookmarkIcon
-                          className={domain.isBookmarked ? "fill-current" : ""}
-                          size={16}
-                        />
-                        <span className="sr-only">
-                          {domain.isBookmarked
-                            ? "Remove bookmark"
-                            : "Add bookmark"}
-                        </span>
-                      </Button>
-                    )}
-                  </div>
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
-                    {Boolean(domain.searchVolume) && (
-                      <span className="text-blue-600">
-                        Monthly Searches: {domain.searchVolume}
-                      </span>
-                    )}
-                    {domain.competition &&
-                      domain.competition !== "UNSPECIFIED" && (
-                        <span className="text-amber-600">
-                          Competition: {domain.competition}
-                        </span>
-                      )}
-                  </div>
+          <Link href={`/domain/${domain.id}`} passHref>
+            <Card className="h-40 bg-white">
+              <CardContent className="flex h-full flex-col p-4">
+                <div className="flex items-start justify-between">
+                  <h3 className="text-lg font-semibold">{domain.name}</h3>
+                  {userId && (
+                    <Button
+                      variant={domain.isBookmarked ? "default" : "outline"}
+                      size="sm"
+                      className="ml-2"
+                      onClick={(e) => void handleBookmarkClick(e, domain.id)}
+                    >
+                      <BookmarkIcon
+                        className={domain.isBookmarked ? "fill-current" : ""}
+                        size={16}
+                      />
+                    </Button>
+                  )}
                 </div>
-                {(domain.highBid ?? domain.lowBid) && (
-                  <div className="flex items-center justify-between text-sm text-gray-500">
-                    {domain.highBid && (
-                      <span>High Bid: ${domain.highBid.toFixed(2)}</span>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {Boolean(domain.searchVolume) && (
+                    <Badge variant="blue">
+                      Monthly Searches: {domain.searchVolume}
+                    </Badge>
+                  )}
+                  {domain.competition &&
+                    domain.competition !== "UNSPECIFIED" && (
+                      <Badge variant="amber">
+                        Competition: {domain.competition}
+                      </Badge>
                     )}
-                    {domain.lowBid && (
-                      <span>Low Bid: ${domain.lowBid.toFixed(2)}</span>
-                    )}
-                  </div>
-                )}
+                </div>
+                <div className="mt-auto flex flex-wrap gap-2">
+                  {domain.highBid && (
+                    <Badge variant="outline">
+                      High Bid: ${domain.highBid.toFixed(2)}
+                    </Badge>
+                  )}
+                  {domain.lowBid && (
+                    <Badge variant="outline">
+                      Low Bid: ${domain.lowBid.toFixed(2)}
+                    </Badge>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </Link>
