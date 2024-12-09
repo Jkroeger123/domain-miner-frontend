@@ -27,7 +27,7 @@ export default async function SearchPage({
   return (
     <div className="container mx-auto py-8">
       <h1 className="mb-4 text-2xl font-bold">Search Results</h1>
-      <p className="italic">{`"${search.prompt}"`}</p>
+      <p className="mb-4 italic">{`"${search.prompt}"`}</p>
       <DomainPoller
         searchId={params.searchId}
         initialSearching={searching}

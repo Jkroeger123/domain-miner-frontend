@@ -36,10 +36,10 @@ export default async function BookmarksPage() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {bookmarks.map(({ domain, createdAt }) => (
-            <div key={domain.id} className="relative">
-              <Card className="h-full transition-shadow hover:shadow-md">
+            <div key={domain.id}>
+              <Card className="h-full border-gray-200 bg-white transition-shadow hover:shadow-md">
                 <CardContent className="p-4">
-                  <div className="mb-2 flex items-start justify-between">
+                  <div className="mb-3 flex items-start justify-between">
                     <h3 className="text-lg font-semibold">{domain.name}</h3>
                     <form
                       action={async () => {
@@ -59,34 +59,32 @@ export default async function BookmarksPage() {
                     </form>
                   </div>
 
-                  <div className="space-y-1">
+                  <div className="mb-2 flex items-center justify-between text-sm">
                     {domain.searchVolume && (
-                      <p className="text-sm text-gray-500">
+                      <span className="text-blue-600">
                         Monthly Searches: {domain.searchVolume.toLocaleString()}
-                      </p>
+                      </span>
                     )}
-
                     {domain.competition &&
                       domain.competition !== "UNSPECIFIED" && (
-                        <p className="text-sm text-gray-500">
+                        <span className="text-amber-600">
                           Competition: {domain.competition}
-                        </p>
+                        </span>
                       )}
-
-                    {domain.highBid && (
-                      <p className="text-sm text-gray-500">
-                        High Bid: ${domain.highBid.toFixed(2)}
-                      </p>
-                    )}
-
-                    {domain.lowBid && (
-                      <p className="text-sm text-gray-500">
-                        Low Bid: ${domain.lowBid.toFixed(2)}
-                      </p>
-                    )}
                   </div>
 
-                  <p className="mt-2 text-xs text-muted-foreground">
+                  {(domain.highBid ?? domain.lowBid) && (
+                    <div className="flex items-center justify-between text-sm text-gray-500">
+                      {domain.highBid && (
+                        <span>High Bid: ${domain.highBid.toFixed(2)}</span>
+                      )}
+                      {domain.lowBid && (
+                        <span>Low Bid: ${domain.lowBid.toFixed(2)}</span>
+                      )}
+                    </div>
+                  )}
+
+                  <p className="mt-3 text-xs text-muted-foreground">
                     Bookmarked on {new Date(createdAt).toLocaleDateString()}
                   </p>
                 </CardContent>
