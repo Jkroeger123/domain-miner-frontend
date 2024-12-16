@@ -27,6 +27,7 @@ const Badge = ({
   const styles = {
     blue: "bg-blue-100 text-blue-700",
     amber: "bg-amber-100 text-amber-700",
+    purple: "bg-purple-100 text-purple-700",
     outline: "border border-gray-200 text-gray-600",
     default: "bg-gray-100 text-gray-700",
   } as const;
@@ -112,7 +113,9 @@ export default function DomainPoller({
           whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
         >
           <Link href={`/domain/${domain.id}`} passHref>
-            <Card className="h-40 bg-white">
+            <Card
+              className={`h-40 bg-white ${domain.aftermarketBid && "border border-purple-200"}`}
+            >
               <CardContent className="flex h-full flex-col p-4">
                 <div className="flex items-start justify-between">
                   <h3 className="text-lg font-semibold">{domain.name}</h3>
@@ -142,6 +145,11 @@ export default function DomainPoller({
                         Competition: {domain.competition}
                       </Badge>
                     )}
+                  {domain.aftermarketBid && (
+                    <Badge variant="purple">
+                      Aftermarket bid: ${domain.aftermarketBid.toFixed(2)}
+                    </Badge>
+                  )}
                 </div>
                 <div className="mt-auto flex flex-wrap gap-2">
                   {domain.highBid && (
@@ -166,11 +174,12 @@ export default function DomainPoller({
   const ListView = () => (
     <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
       <div className="min-w-[800px]">
-        <div className="grid grid-cols-[auto,2fr,1fr,1fr,1fr,1fr] gap-4 border-b border-gray-200 p-4 font-medium">
+        <div className="grid grid-cols-[auto,2fr,1fr,1fr,1fr,1fr,1fr] gap-4 border-b border-gray-200 p-4 font-medium">
           <div></div>
           <div>Domain</div>
           <div>Monthly Searches</div>
           <div>Competition</div>
+          <div>Aftermarket Bid</div>
           <div>High Bid</div>
           <div>Low Bid</div>
         </div>
@@ -183,7 +192,7 @@ export default function DomainPoller({
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="grid grid-cols-[auto,2fr,1fr,1fr,1fr,1fr] items-center gap-4 border-b border-gray-200 p-4 text-sm"
+              className="grid grid-cols-[auto,2fr,1fr,1fr,1fr,1fr,1fr] items-center gap-4 border-b border-gray-200 p-4 text-sm"
             >
               {userId && (
                 <Button
@@ -206,6 +215,11 @@ export default function DomainPoller({
               <div className="text-amber-600">
                 {domain.competition !== "UNSPECIFIED"
                   ? domain.competition
+                  : "-"}
+              </div>
+              <div className="text-purple-700">
+                {domain.aftermarketBid
+                  ? `$${domain.aftermarketBid.toFixed(2)}`
                   : "-"}
               </div>
               <div>
