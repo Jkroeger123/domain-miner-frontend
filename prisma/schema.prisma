@@ -17,6 +17,7 @@ model Domain {
   highBid      Float?
   lowBid       Float?
   searchVolume Int?
+  aftermarketBid Float?
   Search       Search   @relation(fields: [searchId], references: [id])
   bookmarks Bookmark[]
 
