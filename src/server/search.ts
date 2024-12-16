@@ -8,7 +8,7 @@ export const createSearchAndRedirect = async (prompt: string) => {
   const search = await createSearch(prompt);
 
   const response = await fetch(
-    `https://jkroeger123--domain-miner-find-domains.modal.run/?search_id=${search.id}`,
+    `https://thadtayo--domain-finder-find-domains.modal.run/?search_id=${search.id}`,
   );
 
   if (response.ok) {
